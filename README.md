@@ -24,7 +24,7 @@ YouTube Tutorial: Coming Soon
 1. Download VoiceMeeter from the [official website](https://vb-audio.com/Voicemeeter/index.htm).
 2. Install VoiceMeeter on your computer.
 3. Open VoiceMeeter and then add your mic and headphones to the hardware inputs and outputs.
-4. Download the latest version of the Soundboard App from the [Releases]()
+4. Download the latest version of the Soundboard App from the [Releases](https://github.com/brokiem/soundboard/releases)
 5. Extract the contents of the zip file to a folder of your choice.
 6. Install the soundboard by running the `Soundboard.msi` installer file.
 7. Launch the Soundboard App from the Start Menu or Desktop shortcut.
