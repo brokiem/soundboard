@@ -11,6 +11,7 @@ import {getSettings, setSettings} from "./assets/settings.js";
 import SoundContextMenu from "./components/SoundContextMenu.vue";
 import {invoke} from "@tauri-apps/api";
 import {listen} from "@tauri-apps/api/event";
+import {useStore} from "./store/store";
 
 export default defineComponent( {
   name: 'App',
@@ -81,7 +82,7 @@ export default defineComponent( {
 
         if (sound) {
           // @ts-ignore
-          const outputDevice = JSON.parse(localStorage.getItem("output_device"));
+          const outputDevice = useStore().get("output_device");
           invoke("play_sound", {
             soundName: sound.name,
             soundPath: sound.path,

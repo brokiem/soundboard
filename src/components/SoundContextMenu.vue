@@ -8,6 +8,7 @@ import {
   DialogPanel,
   DialogTitle,
 } from '@headlessui/vue'
+import {useStore} from "../store/store";
 
 export default defineComponent( {
   name: 'SoundContextMenu',
@@ -29,8 +30,7 @@ export default defineComponent( {
         this.openModal();
         this.isRecordingKeybind = true;
       } else if (menu === "Remove") {
-        removeSound(localStorage.getItem("selected_sound"));
-        localStorage.removeItem("selected_sound");
+        removeSound(useStore().get("selected_sound"));
       }
 
       this.hide();
@@ -50,18 +50,16 @@ export default defineComponent( {
     },
     setKeybind() {
       if (this.recordedKeybind.code !== null) {
-        setSoundKeybind(localStorage.getItem("selected_sound"), this.recordedKeybind);
-        localStorage.removeItem("selected_sound");
+        setSoundKeybind(useStore().get("selected_sound"), this.recordedKeybind);
       }
 
       this.closeModal();
     },
     resetKeybind() {
-      setSoundKeybind(localStorage.getItem("selected_sound"), {
+      setSoundKeybind(useStore().get("selected_sound"), {
         code: null,
         key: null
       });
-      localStorage.removeItem("selected_sound");
 
       this.closeModal();
     }

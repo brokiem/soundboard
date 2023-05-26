@@ -15,6 +15,7 @@
 <script>
 import {invoke} from "@tauri-apps/api";
 import {getSettings, setSettings} from "../assets/settings.js";
+import {useStore} from "../store/store";
 
 export default {
   name: "InputDeviceDropdown",
@@ -38,7 +39,7 @@ export default {
           this.selected = devices[0];
         }
 
-        localStorage.setItem("output_device", JSON.stringify(this.selected));
+        useStore().set("output_device", this.selected);
       }
     });
   },
@@ -59,7 +60,7 @@ export default {
       });
 
       this.selected = this.devices.find((device) => {return device.name === deviceName;});
-      localStorage.setItem("output_device", JSON.stringify(this.selected));
+      useStore().set("output_device", this.selected);
       this.toggle();
     }
   }

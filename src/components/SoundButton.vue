@@ -13,6 +13,7 @@
 import {invoke} from "@tauri-apps/api";
 import {listen} from "@tauri-apps/api/event";
 import { defineComponent } from "vue";
+import {useStore} from "../store/store";
 
 export default defineComponent({
   name: "SoundButton",
@@ -41,7 +42,7 @@ export default defineComponent({
   },
   methods: {
     play() {
-      const outputDevice = JSON.parse(localStorage.getItem("output_device") as string);
+      const outputDevice = useStore().get("output_device");
       invoke("play_sound", {
         soundName: this.sound_name,
         soundPath: this.sound_path,
@@ -61,7 +62,7 @@ export default defineComponent({
 
     // Event listener to cancel default right-click behavior
     document.getElementById(this.sound_name)!.addEventListener("contextmenu", (event) => {
-      localStorage.setItem("selected_sound", this.sound_name);
+      useStore().set("selected_sound", this.sound_name);
 
       const x = event.clientX;
       const y = event.clientY;
