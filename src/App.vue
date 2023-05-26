@@ -10,6 +10,7 @@ import {getAllSounds} from "./assets/sound-manager.js";
 import {getSettings, setSettings} from "./assets/settings.js";
 import SoundContextMenu from "./components/SoundContextMenu.vue";
 import {invoke} from "@tauri-apps/api";
+import {listen} from "@tauri-apps/api/event";
 
 export default defineComponent( {
   name: 'App',
@@ -46,27 +47,23 @@ export default defineComponent( {
       this.sounds = sounds;
     });
 
-    document.addEventListener('sound_added', (e) => {
-      // @ts-ignore
-      this.sounds.push(e.detail);
+    listen("sound_added", (e) => {
+      this.sounds.push(e.payload);
     });
 
-    document.addEventListener('sound_removed', (e: any) => {
+    listen("sound_removed", (e: any) => {
       this.sounds = this.sounds.filter((sound: any) => {
-        return sound.name !== e.detail.name;
+        return sound.name !== e.payload.name;
       });
     });
 
-    document.addEventListener("sound_keybind_changed", (event) => {
-      // @ts-ignore
+    listen("sound_keybind_changed", (e: any) => {
       const sound = this.sounds.find((sound) => {
-        // @ts-ignore
-        return sound.name === event.detail.name;
+        return sound.name === e.payload.name;
       });
 
       if (sound) {
-        // @ts-ignore
-        sound.keybind = event.detail.keybind;
+        sound.keybind = e.payload.keybind;
       }
     });
 

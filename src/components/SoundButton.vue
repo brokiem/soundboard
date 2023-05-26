@@ -9,11 +9,12 @@
   </button>
 </template>
 
-<script>
+<script lang="ts">
 import {invoke} from "@tauri-apps/api";
-import {removeSound} from "../assets/sound-manager.js";
+import {listen} from "@tauri-apps/api/event";
+import { defineComponent } from "vue";
 
-export default {
+export default defineComponent({
   name: "SoundButton",
   props: {
     sound_name: {
@@ -25,7 +26,7 @@ export default {
       required: true
     },
     keybind: {
-      type: String,
+      type: Object,
       required: false
     }
   },
@@ -40,7 +41,7 @@ export default {
   },
   methods: {
     play() {
-      const outputDevice = JSON.parse(localStorage.getItem("output_device"));
+      const outputDevice = JSON.parse(localStorage.getItem("output_device") as string);
       invoke("play_sound", {
         soundName: this.sound_name,
         soundPath: this.sound_path,
@@ -49,16 +50,17 @@ export default {
     },
     show(x = 0, y = 0) {
       const customMenu = document.getElementById("sound-context-menu");
-      customMenu.classList.remove("hidden");
-      customMenu.style.left = x + "px";
-      customMenu.style.top = y + "px";
+      customMenu!.classList.remove("hidden");
+      customMenu!.style.left = x + "px";
+      customMenu!.style.top = y + "px";
     },
   },
   mounted() {
+    // @ts-ignore
     this.keybind_1 = this.keybind;
 
     // Event listener to cancel default right-click behavior
-    document.getElementById(this.sound_name).addEventListener("contextmenu", (event) => {
+    document.getElementById(this.sound_name)!.addEventListener("contextmenu", (event) => {
       localStorage.setItem("selected_sound", this.sound_name);
 
       const x = event.clientX;
@@ -68,13 +70,13 @@ export default {
       this.show(x, y);
     });
 
-    document.addEventListener("sound_keybind_changed", (event) => {
-      if (event.detail.name === this.sound_name) {
-        this.keybind_1 = event.detail.keybind;
+    listen("sound_keybind_changed", (event: any) => {
+      if (event.payload.name === this.sound_name) {
+        this.keybind_1 = event.payload.keybind;
       }
     });
   }
-}
+});
 </script>
 
 <style scoped>

@@ -1,5 +1,6 @@
 import {appConfigDir} from "@tauri-apps/api/path";
 import * as fs from "@tauri-apps/api/fs";
+import {emit} from "@tauri-apps/api/event";
 
 export async function getSettings() {
     const dir = await appConfigDir();
@@ -24,9 +25,6 @@ export async function setSettings(settings, callEvent = true) {
     });
 
     if (callEvent) {
-        const event = new CustomEvent("settings_changed", {
-            detail: settings
-        });
-        document.dispatchEvent(event);
+        await emit("settings_changed", settings);
     }
 }

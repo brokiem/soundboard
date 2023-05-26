@@ -1,5 +1,6 @@
 import * as fs from "@tauri-apps/api/fs";
 import {appLocalDataDir} from "@tauri-apps/api/path";
+import {emit} from "@tauri-apps/api/event";
 
 export async function getAllSounds() {
     const appLocalData = await appLocalDataDir();
@@ -52,14 +53,11 @@ export async function addSound(soundName, fileName, buffer, callEvent = true) {
     });
 
     if (callEvent) {
-        const event = new CustomEvent("sound_added", {
-            detail: {
-                name: soundName,
-                keybind: null,
-                path: `${appLocalData}sounds/${soundName}-${fileName}`
-            }
+        await emit("sound_added", {
+            name: soundName,
+            keybind: null,
+            path: `${appLocalData}sounds/${soundName}-${fileName}`
         });
-        document.dispatchEvent(event);
     }
 }
 
@@ -78,14 +76,11 @@ export async function removeSound(soundName, callEvent = true) {
         });
 
         if (callEvent) {
-            const event = new CustomEvent("sound_removed", {
-                detail: {
-                    name: soundName,
-                    keybind: sound.keybind,
-                    path: sound.path
-                }
+            await emit("sound_removed", {
+                name: soundName,
+                keybind: sound.keybind,
+                path: sound.path
             });
-            document.dispatchEvent(event);
         }
     }
 }
@@ -107,14 +102,11 @@ export async function setSoundKeybind(soundName, keybind, callEvent = true) {
         });
 
         if (callEvent) {
-            const event = new CustomEvent("sound_keybind_changed", {
-                detail: {
-                    name: soundName,
-                    keybind: sound.keybind,
-                    path: sound.path
-                }
+            await emit("sound_keybind_changed", {
+                name: soundName,
+                keybind: sound.keybind,
+                path: sound.path
             });
-            document.dispatchEvent(event);
         }
     }
 }
