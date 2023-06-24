@@ -19,7 +19,7 @@ export async function getAllSounds() {
     return sounds.sounds;
 }
 
-export async function addSound(soundName, fileName, buffer, callEvent = true) {
+export async function addSound(soundName, fileName, buffer) {
     const appLocalData = await appLocalDataDir();
 
     // check if sounds folder exists
@@ -52,16 +52,14 @@ export async function addSound(soundName, fileName, buffer, callEvent = true) {
         contents: JSON.stringify(sounds)
     });
 
-    if (callEvent) {
-        await emit("sound_added", {
-            name: soundName,
-            keybind: null,
-            path: `${appLocalData}sounds/${soundName}-${fileName}`
-        });
-    }
+    await emit("sound_added", {
+        name: soundName,
+        keybind: null,
+        path: `${appLocalData}sounds/${soundName}-${fileName}`
+    });
 }
 
-export async function removeSound(soundName, callEvent = true) {
+export async function removeSound(soundName) {
     const appLocalData = await appLocalDataDir();
 
     const sounds = JSON.parse(await fs.readTextFile(appLocalData + "sounds.json"));
@@ -75,17 +73,15 @@ export async function removeSound(soundName, callEvent = true) {
             contents: JSON.stringify(sounds)
         });
 
-        if (callEvent) {
-            await emit("sound_removed", {
-                name: soundName,
-                keybind: sound.keybind,
-                path: sound.path
-            });
-        }
+        await emit("sound_removed", {
+            name: soundName,
+            keybind: sound.keybind,
+            path: sound.path
+        });
     }
 }
 
-export async function setSoundKeybind(soundName, keybind, callEvent = true) {
+export async function setSoundKeybind(soundName, keybind) {
     const appLocalData = await appLocalDataDir();
 
     const sounds = JSON.parse(await fs.readTextFile(appLocalData + "sounds.json"));
@@ -101,12 +97,10 @@ export async function setSoundKeybind(soundName, keybind, callEvent = true) {
             contents: JSON.stringify(sounds)
         });
 
-        if (callEvent) {
-            await emit("sound_keybind_changed", {
-                name: soundName,
-                keybind: sound.keybind,
-                path: sound.path
-            });
-        }
+        await emit("sound_keybind_changed", {
+            name: soundName,
+            keybind: sound.keybind,
+            path: sound.path
+        });
     }
 }

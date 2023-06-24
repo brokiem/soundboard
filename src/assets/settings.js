@@ -16,7 +16,7 @@ export async function getSettings() {
     return JSON.parse(await fs.readTextFile(dir + "settings.json"));
 }
 
-export async function setSettings(settings, callEvent = true) {
+export async function setSettings(settings) {
     const dir = await appConfigDir();
 
     fs.writeFile({
@@ -24,7 +24,5 @@ export async function setSettings(settings, callEvent = true) {
         contents: JSON.stringify(settings)
     });
 
-    if (callEvent) {
-        await emit("settings_changed", settings);
-    }
+    await emit("settings_changed", settings);
 }
